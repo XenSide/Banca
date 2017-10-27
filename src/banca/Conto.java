@@ -26,6 +26,10 @@ public class Conto {
         this.saldo = saldo;
     }
 
+    public float getSaldo() {
+        return saldo;
+    }
+
     public void setBoolPreORVer(Boolean boolPreORVer) {
         this.boolPreORVer = boolPreORVer;
     }
@@ -115,7 +119,7 @@ public class Conto {
         return nContoProv;
     }
 
-     public static boolean reqRngSaldo(int iOut) {
+    public static boolean reqRngSaldo(int iOut) {
         InputStreamReader input = new InputStreamReader(System.in); //Ho bisogno di ripetere il buffer d'input qui dato che 
         BufferedReader tastiera = new BufferedReader(input); //la funzione è statica e non accetta variabili che non siano a loro volta static
         String rng;
@@ -145,14 +149,15 @@ public class Conto {
         } while (!done);
         return boolRngSaldo;
     }
-    public static float reqSaldo(int iOut){
+
+    public static float reqSaldo(int iOut) {
         InputStreamReader input = new InputStreamReader(System.in); //Ho bisogno di ripetere il buffer d'input qui dato che 
         BufferedReader tastiera = new BufferedReader(input); //la funzione è statica e non accetta variabili che non siano a loro volta static
         boolean done;
-        do{
-         try {
+        do {
+            try {
                 System.out.println("Inserisci il saldo del " + iOut + "° conto");
-                saldoProv =Float.valueOf(tastiera.readLine());
+                saldoProv = Float.valueOf(tastiera.readLine());
                 done = true;
                 if (nContoProv.length() < 7 || nContoProv.length() > 30) {
                     throw new IOException(); //si potrebbe aggiungere un booleano per evitare il controllo nel while ma non so se è effettivamente più efficiente o no.
@@ -163,8 +168,9 @@ public class Conto {
             }
         } while (!done);
         return saldoProv;
-        
+
     }
+
     public static float reqImporto(int iOut) {
         InputStreamReader input = new InputStreamReader(System.in); //Ho bisogno di ripetere il buffer d'input qui dato che 
         BufferedReader tastiera = new BufferedReader(input); //la funzione è statica e non accetta variabili che non siano a loro volta static
@@ -182,7 +188,6 @@ public class Conto {
                 System.out.println("Errore nell'immisione dell'importo, se stai provando ad inserire delle cifre decimali usa il punto al posto della virgola");
                 done = false;
             }
-
         } while (!done);
         return importo;
     }

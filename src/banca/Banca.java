@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package banca;
 
 import java.io.BufferedReader; //Input
 import java.io.InputStreamReader; //Input
 import java.util.concurrent.ThreadLocalRandom; //RNG per il saldo
 
-/**
- *
- * @author XenSide
- */
 public class Banca {
 
     public static void main(String[] args) {
@@ -59,14 +50,18 @@ public class Banca {
         }
 
         System.out.println("Inizio della simulazione dei movimenti");
-        for (int i = 0; i < 5; i++) { //rimetti a 5
+        int conto=1;
+        boolean conto1reqRngTipoMov=conto1.reqRngTipoMovimento(conto); //Variabili di comodo per evitare la continua ripetizione della richiesta all'interno del for.
+        conto++;
+        boolean conto2reqRngTipoMov=conto2.reqRngTipoMovimento(conto);
+        for (int i = 0; i < 1; i++) { 
             int iOut = i + 1;
-            int conto = 1;
+            conto = 1;
             boolean v = false; //gestice la modalità "verbose", usata principalmente per debug
             System.out.println("Set di movimenti numero " + iOut + "\n");
             //Creazione di un movimento per conto1
             System.out.println("Primo Conto:");
-            if (conto1.reqRngTipoMovimento(conto)) {
+            if (conto1reqRngTipoMov) {
                 conto1.setBoolPreORVer(ThreadLocalRandom.current().nextBoolean());
             } else {
                 conto1.reqTipoMovimento(iOut);
@@ -78,7 +73,7 @@ public class Banca {
             //Creazione di un movimento per conto2
             System.out.println("\nSecondo Conto:");
             conto++;
-            if (conto2.reqRngTipoMovimento(conto)) {
+            if (conto2reqRngTipoMov) {
                 conto2.setBoolPreORVer(ThreadLocalRandom.current().nextBoolean());
             } else {
                 conto2.reqTipoMovimento(iOut);
@@ -90,6 +85,9 @@ public class Banca {
         }
         conto1.stampa();
         conto2.stampa();
-        //Add bigger Conto control and printing
+        if (conto1.getSaldo()>conto2.getSaldo())
+            System.out.println("Il 1° conto ha un saldo maggiore.");
+                    else
+            System.out.println("il 2° conto ha un saldo maggiore.");
     }
 }
