@@ -1,6 +1,7 @@
 package banca;
 
 /*Todo list:
+Creazione del metodo giroconto che prende i soldi in un conto e li passa sull'altro, facendo attenzione al saldo disponibile di tutti e due.
 Aggiunta del fido, preferibilmente come classe figlio, con @override.
 Rimozione di Date Data e scrittura di apposita stupida classe
 Aggiunta di Classe che includa:
