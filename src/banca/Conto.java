@@ -1,5 +1,13 @@
 package banca;
 
+/*Todo list:
+Aggiunta del fido, preferibilmente come classe figlio, con @override.
+Rimozione di Date Data e scrittura di apposita stupida classe
+Aggiunta di Classe che includa:
+nome, cognome,sesso,comune di nascità,indirizzo,numTel,codFisc,dataNascita dell'intestatario
+e che permetta le seguenti operazioni(metodi):
+checkSex,Check18.
+*/
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
