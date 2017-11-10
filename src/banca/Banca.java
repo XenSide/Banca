@@ -10,7 +10,8 @@ import java.util.concurrent.ThreadLocalRandom; //RNG per il saldo
 
 public class Banca {
 
-    /*public void tryInputUntill({
+    /*WIP
+    public void tryInputUntill({
             do {
                 try {
                     switch (tastiera.readLine().toLowerCase()) { //il .toLowerCase() forza il lowercase dell'input evitando molti problemi.
@@ -34,29 +35,31 @@ public class Banca {
                     done=false;
                 }
             }while (!done);
-}WIP */
-        public static String reqNConto(int iOut) { //transform in setNConto
-        InputStreamReader input = new InputStreamReader(System.in); //Ho bisogno di ripetere il buffer d'input qui dato che 
-        BufferedReader tastiera = new BufferedReader(input); //la funzione è statica e non accetta variabili che non siano a loro volta static
-        boolean done;
+    }
+    WIP*/
+    private static String reqNConto(int iOut) throws IOException { //transform in setNConto
+        Boolean done = null;
+        InputStreamReader input = new InputStreamReader(System.in);
+        BufferedReader tastiera = new BufferedReader(input);
+        String nConto = null;
         System.out.println("Inserisci il numero identificativo del " + iOut + "° conto");
         do {
-
             try {
                 nConto = tastiera.readLine();
-                done = true;
                 if (nConto.length() < 7 || nConto.length() > 30) {
-                    throw new IOException(); //si potrebbe aggiungere un booleano per evitare il controllo nel while ma non so se è effettivamente più efficiente o no.
+                    throw new IOException();
+                } else {
+                    done = true;
                 }
-            } catch (IOException | NumberFormatException | NullPointerException e) {
+            } catch (IOException e) {
                 System.out.println("Errore nell'inserimento del numero di conto, riprova facendo attenzione ad inserire un numero compreso tra le 7 e le 30 cifre");
                 done = false;
             }
         } while (!done);
         return nConto;
     }
-        
-    public static boolean reqRngTipoMovimento(int iOut) {
+
+    private static boolean reqRngTipoMovimento(int iOut) {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader tastiera = new BufferedReader(input);
         String rng;
@@ -86,7 +89,7 @@ public class Banca {
         return boolRngTipoMovimento;
     }
 
-    public static boolean reqTipoMovimento(int iOut) {
+    private static boolean reqTipoMovimento() {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader tastiera = new BufferedReader(input);
         String preORVer;
@@ -116,7 +119,7 @@ public class Banca {
         return boolPreORVer;
     }
 
-    public static boolean reqImporto(Conto contoProv, boolean boolPreORVer) {
+    private static boolean reqImporto(Conto contoProv, boolean boolPreORVer) {
         boolean done;
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader tastiera = new BufferedReader(input);
@@ -127,9 +130,10 @@ public class Banca {
         }
         do {
             try {
-                done = contoProv.setImporto(Double.valueOf(tastiera.readLine())); //Questo metodo restituisce un booleano che serve a capire se l'operazione è stata effettuata senza problemi
-                if(!done)
+                done = contoProv.setImporto(Double.valueOf(tastiera.readLine()),boolPreORVer); //Questo metodo restituisce un booleano che serve a capire se l'operazione è stata effettuata senza problemi
+                if (!done) {
                     throw new IOException();
+                }
             } catch (IOException | NumberFormatException e) {
                 System.out.println("Errore nell'immissione dell'importo, se stai provando ad inserire delle cifre decimali usa il punto al posto della virgola");
                 done = false;
@@ -138,8 +142,37 @@ public class Banca {
         return done;
     }
 
-    
-    public static void main(String[] args) {
+    private static boolean reqPrimoVer(Conto contoProv, int i) {
+        boolean done;
+        InputStreamReader input = new InputStreamReader(System.in);
+        BufferedReader tastiera = new BufferedReader(input);
+        if (i == 1) {
+            System.out.println("Creazione del primo conto riuscita, vuoi effettuare un versamento iniziale? Digita Si o No");
+        } else {
+            System.out.println("Creazione del secondo conto riuscita, vuoi effettuare un versamento iniziale? Digita Si o No");
+        }
+        do {
+            try {
+                switch (tastiera.readLine().toLowerCase()) { //il .toLowerCase() forza il lowercase dell'input evitando molti problemi.
+                    case "si":
+                        done = reqImporto(contoProv, false);
+                        contoProv.movimento(false);
+                        break;
+                    case "no":
+                        done = true;
+                        break;
+                    default:
+                        throw new IOException();
+                }
+            } catch (IOException e) {
+                System.out.println("Errore di immissione, digita Si o No");
+                done = false;
+            }
+        } while (!done);
+        return done;
+    }
+
+    public static void main(String[] args) throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader tastiera = new BufferedReader(input);
         Conto conto1 = null; //pre-dichiarazione necessaria per abilitare la creazione di un oggetto in un controllo if.
@@ -149,66 +182,19 @@ public class Banca {
         String data = null;
         Double saldo = 0d;
         Boolean done;
-
         for (int i = 0; i < 2;) {   //Necessario per la creazione di due diversi oggetti con due set di valori
             int iOut = i + 1;
             //Creazione di due oggetti separati, inserimento di nConto e saldo tramite costruttore.
             if (i == 0) { //facilmente sostituibile con un Array di vettori, non l'ho fatto semplicemente perché non ne abbiamo ancora parlato in classe
-                conto1 = new Conto(); //Inserimento di nConto e creazione dell'oggetto NB:Siamo dentro un for.
-                System.out.println("Creazione del primo conto riuscita, vuoi effettuare un versamento iniziale? Digita Si o No");
-                do {
-                    try {
-                        switch (tastiera.readLine().toLowerCase()) { //il .toLowerCase() forza il lowercase dell'input evitando molti problemi.
-                            case "si":
-                                //importo=Double.valueOf(tastiera.readLine());
-                                done = reqImporto(conto1, false);
-                                conto1.movimento(false);
-
-                                /*do {
-                                    try {
-                                        System.out.println("Inserisci l'importo da versare:");
-                                        done = conto1.setImporto(Double.valueOf(tastiera.readLine())); //Questo metodo restituisce un booleano che serve a capire se l'operazione è stata effettuata senza problemi
-                                    } catch (IOException | NumberFormatException e) {
-                                        System.out.println("Errore nell'immisione dell'importo, se stai provando ad inserire delle cifre decimali usa il punto al posto della virgola");
-                                        done = false;
-                                    }
-                                } while (!done);
-                                 */
-                                break;
-                            case "no":
-                                done = true;
-                                break;
-                            default:
-                                throw new IOException();
-                        }
-                    } catch (IOException e) {
-                        System.out.println("Errore di immissione, digita Si o No");
-                        done = false;
-                    }
-                } while (!done);
+                conto1 = new Conto(reqNConto(iOut)); //Inserimento di nConto e creazione dell'oggetto NB:Siamo dentro un for.
+                reqPrimoVer(conto1,iOut);
+                //potenziale funzione
+                //do
+                //while(!done);
                 i++;
             } else if (i == 1) {
-                conto2 = new Conto();
-                System.out.println("Creazione del secondo conto riuscita, vuoi effettuare un versamento iniziale? Digita Si o No");
-                do {
-                    try {
-                        switch (tastiera.readLine().toLowerCase()) { //il .toLowerCase() forza il lowercase dell'input evitando molti problemi.
-                            case "si":
-                                //importo=Double.valueOf(tastiera.readLine());
-                                done = reqImporto(conto2, false);
-                                conto2.movimento(false);
-                                break;
-                            case "no":
-                                done = true;
-                                break;
-                            default:
-                                throw new IOException();
-                        }
-                    } catch (IOException e) {
-                        System.out.println("Errore di immisione, digita Si o No");
-                        done = false;
-                    }
-                } while (!done);
+                conto2 = new Conto(reqNConto(iOut));
+                reqPrimoVer(conto2,iOut);
                 i++;
             }
         }
@@ -217,8 +203,8 @@ public class Banca {
         boolean conto1reqRngTipoMov = reqRngTipoMovimento(conto); //Variabili di comodo per evitare la continua ripetizione della richiesta all'interno del for.
         conto++;
         boolean conto2reqRngTipoMov = reqRngTipoMovimento(conto);
-        Boolean boolPreORVer = null, boolPreORVer2 = null;
-        for (int i = 0; i < 1; i++) {
+        Boolean boolPreORVer = null;
+        for (int i = 0; i < 5; i++) {
             int iOut = i + 1;
             conto = 1;
             //boolean v = false; //gestice la modalità "verbose", usata principalmente per debug
@@ -229,26 +215,23 @@ public class Banca {
                 boolPreORVer = ThreadLocalRandom.current().nextBoolean();
                 reqImporto(conto1, boolPreORVer);//richiede l'importo ma non il tipo di movimento.
             } else {
-                boolPreORVer = reqTipoMovimento(iOut);
+                boolPreORVer = reqTipoMovimento();
                 reqImporto(conto1, boolPreORVer);//richiede sia il tipo di movimento che l'importo
             }
-            conto1.movimento(boolPreORVer);
             //Creazione di un movimento per conto2
             System.out.println("\nSecondo Conto:");
             conto++;
             if (conto2reqRngTipoMov) {
-                boolPreORVer2 = ThreadLocalRandom.current().nextBoolean();
+                boolPreORVer = ThreadLocalRandom.current().nextBoolean();
                 reqImporto(conto2, boolPreORVer);
             } else {
-                boolPreORVer2 = reqTipoMovimento(iOut);
-                reqImporto(conto2, boolPreORVer2);
+                boolPreORVer = reqTipoMovimento();
+                reqImporto(conto2, boolPreORVer);
             }
-            conto2.movimento(boolPreORVer2);
         }
 
         conto1.stampa(boolPreORVer);
-
-        conto2.stampa(boolPreORVer2);
+        conto2.stampa(boolPreORVer);
         double sommaconti = conto1.getSaldo() - conto2.getSaldo();
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.getDefault());
         DecimalFormat dfEuro = (DecimalFormat) nf;
