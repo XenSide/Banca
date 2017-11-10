@@ -15,18 +15,18 @@ public class Conto {
 
     public String nConto = null, data, lastData;
     private static String nContoProv, dataProv; //Creati data l'esigenza di metodi statici per la creazione dinamica dell'oggetto.
-    private float saldo, lastSaldo, lastImporto;
-    private static float importo, saldoProv;
+    private double saldo, lastSaldo, lastImporto;
+    private static double importo, saldoProv;
     private Boolean boolPreORVer, boolRngTipoMovimento, boolRngSaldo; //Boolean perché abbiamo bisogno di impostare questa variable null, cosa non possibile con un tipo primitivo.
     InputStreamReader input = new InputStreamReader(System.in);
     BufferedReader tastiera = new BufferedReader(input);
 
-    public Conto(String nConto, float saldo) {
+    public Conto(String nConto, double saldo) {
         this.nConto = nConto;
         this.saldo = saldo;
     }
 
-    public float getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
@@ -38,7 +38,7 @@ public class Conto {
         this.data = data;
     }
 
-    public void setImporto(float importo) {
+    public void setImporto(double importo) {
         Conto.importo = importo;
     }
 
@@ -150,7 +150,7 @@ public class Conto {
         return boolRngSaldo;
     }
 
-    public static float reqSaldo(int iOut) {
+    public static double reqSaldo(int iOut) {
         InputStreamReader input = new InputStreamReader(System.in); //Ho bisogno di ripetere il buffer d'input qui dato che 
         BufferedReader tastiera = new BufferedReader(input); //la funzione è statica e non accetta variabili che non siano a loro volta static
         boolean done;
@@ -171,7 +171,7 @@ public class Conto {
 
     }
 
-    public static float reqImporto(int iOut) {
+    public static double reqImporto(int iOut) {
         InputStreamReader input = new InputStreamReader(System.in); //Ho bisogno di ripetere il buffer d'input qui dato che 
         BufferedReader tastiera = new BufferedReader(input); //la funzione è statica e non accetta variabili che non siano a loro volta static
         boolean done;
@@ -212,7 +212,7 @@ public class Conto {
         return dataProv;
     }
 
-    public float movimento(boolean v) { //v= verbose, log di tutti i traferimenti
+    public double movimento(boolean v) { //v= verbose, log di tutti i traferimenti
         lastImporto = importo;
         lastData = data;
         lastSaldo = saldo;

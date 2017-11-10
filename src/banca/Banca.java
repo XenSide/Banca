@@ -10,9 +10,9 @@ public class Banca {
         Conto conto1 = null; //pre-dichiarazione necessaria per abilitare la creazione di un oggetto in un controllo if.
         Conto conto2 = null;
         String nConto;
-        float importo = 0;
+        double importo = 0;
         String data = null;
-        float saldo;
+        double saldo;
 
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader tastiera = new BufferedReader(input);
